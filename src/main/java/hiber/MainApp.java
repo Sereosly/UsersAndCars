@@ -7,67 +7,51 @@ import hiber.service.UserService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-public class MainApp {
-   public static void main(String[] args) throws SQLException {
-      AnnotationConfigApplicationContext context = 
-            new AnnotationConfigApplicationContext(AppConfig.class);
+public final class MainApp {
+    public static void main(String[] args) throws SQLException {
+        final AnnotationConfigApplicationContext context =
+                new AnnotationConfigApplicationContext(AppConfig.class);
 
-      UserService userService = context.getBean(UserService.class);
+        final UserService userService = context.getBean(UserService.class);
 
+        final Car car1 = new Car("Toyota", 2020);
+        final Car car2 = new Car("Honda", 2018);
+        final Car car3 = new Car("AUDI", 2009);
+        final Car car4 = new Car("AUDI", 2003);
 
-      User user1 = new User();
-      user1.setFirstName("User1");
-      user1.setLastName("Lastname1");
-      user1.setEmail("user1@mail.ru");
+        final User user1 = new User("User1", "Lastname1", "user1@mail.ru", car1);
+        final User user2 = new User("User1", "Lastname1", "user1@mail.ru", car2);
+        final User user3 = new User("User3", "Lastname3", "user3@mail.ru", car3);
+        final User user4 = new User("User4", "Lastname4", "user4@mail.ru", car4);
 
-      User user2 = new User();
-      user2.setFirstName("User2");
-      user2.setLastName("Lastname2");
-      user2.setEmail("user2@mail.ru");
-
-      User user3 = new User("User3", "Lastname3", "user3@gmail.com");
-      User user4 = new User("User3", "Lastname3", "user3@gmail.com");
-
-      Car car1 = new Car();
-      car1.setModel("Toyota");
-      car1.setSeries(2020);
-
-      Car car2 = new Car("Honda",2018);
-      Car car3 = new Car("BMW", 2009);
-      Car car4 = new Car("AUDI", 2003);
-
-      user1.setCar(car1);
-      user2.setCar(car2);
-      user3.setCar(car3);
-      user4.setCar(car4);
-
-      userService.add(user1);
-      userService.add(user2);
-      userService.add(user3);
-      userService.add(user4);
+        userService.add(user1);
+        userService.add(user2);
+        userService.add(user3);
+        userService.add(user4);
 
 
+        System.out.println("Список всех пользователей:");
+        final List<User> users = userService.listUsers();
+        users.forEach(System.out::println);
 
-      List<User> users = userService.listUsers();
-      for (User user : users) {
-         System.out.println("Id = "+user.getId());
-         System.out.println("First Name = "+user.getFirstName());
-         System.out.println("Last Name = "+user.getLastName());
-         System.out.println("Email = "+user.getEmail());
-         System.out.println();
-      }
+        System.out.println("\nПользователи с машиной Honda 2018:");
+        final List<User> foundUsers = (userService.getUserByCarModelAndSeries("Honda", 2018));
+        System.out.println(foundUsers.isEmpty() ? "Пользователи с машиной Honda 2018 не найдены" :
+                foundUsers.stream().map(User::toString).collect(Collectors.joining("\n")));
 
-      User foundUser = userService.getUserByCarModelAndSeries("Honda", 2018);
-      if (foundUser != null) {
-         System.out.println("Id = "+foundUser.getId());
-         System.out.println("First Name = "+foundUser.getFirstName());
-         System.out.println("Last Name = "+foundUser.getLastName());
-      } else {
-         System.out.println("No user found");
-      }
+        System.out.println("\nПользователи, сгруппированные по модели машины:");
+        final Map<String, List<User>> usersByCarModel = users.stream()
+                .filter(user -> user.getCar() != null)
+                .collect(Collectors.groupingBy(user -> user.getCar().getModel()));
+        usersByCarModel.forEach((model, userList) ->
+                System.out.println("Модель: " + model + "\n" +
+                        userList.stream().map(User::toString).collect(Collectors.joining("\n"))));
 
-      context.close();
-   }
+        context.close();
+    }
 }

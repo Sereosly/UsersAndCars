@@ -28,7 +28,7 @@ public class AppConfig {
 
    @Bean
    public DataSource getDataSource() {
-      DriverManagerDataSource dataSource = new DriverManagerDataSource();
+      final DriverManagerDataSource dataSource = new DriverManagerDataSource();
       dataSource.setDriverClassName(env.getProperty("db.driver"));
       dataSource.setUrl(env.getProperty("db.url"));
       dataSource.setUsername(env.getProperty("db.username"));
@@ -38,11 +38,11 @@ public class AppConfig {
 
    @Bean
    public LocalSessionFactoryBean getSessionFactory() {
-      LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
+      final LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
       factoryBean.setDataSource(getDataSource());
       factoryBean.setPackagesToScan("hiber.model");
-      
-      Properties props=new Properties();
+
+      final Properties props=new Properties();
       props.put("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
       props.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
 
@@ -53,7 +53,7 @@ public class AppConfig {
 
    @Bean
    public HibernateTransactionManager getTransactionManager() {
-      HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+      final HibernateTransactionManager transactionManager = new HibernateTransactionManager();
       transactionManager.setSessionFactory(getSessionFactory().getObject());
       return transactionManager;
    }
