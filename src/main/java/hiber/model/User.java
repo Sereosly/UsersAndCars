@@ -24,18 +24,18 @@ public final class User {
     @MapsId
     private Car car;
 
-    public User(String firstName, String lastName, String email) {
+    public User(final String firstName, final String lastName, final String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
-    public User(String firstName, String lastName, String email, Car car) {
+    public User(final String firstName, final String lastName, final String email, final Car car) {
         this(firstName, lastName, email);
         this.car = car;
     }
 
-    public User(String firstName, String lastName) {
+    public User(final String firstName, final String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -78,17 +78,6 @@ public final class User {
     }
 
     @Override
-    public final String toString() {
-        return "( " +
-                "ID = " + id + "|" +
-                "First Name = '" + firstName + '\'' + " | " +
-                "Last Name = '" + lastName + '\'' + " | " +
-                "Email = '" + email + '\'' + " | " +
-                ", car=" + (car != null ? car.toString() : "No car") +
-                '}';
-    }
-
-    @Override
     public final boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         final User user = (User) o;
@@ -101,5 +90,16 @@ public final class User {
     @Override
     public final int hashCode() {
         return Objects.hash(firstName, lastName, email);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", car=" + car +
+                '}';
     }
 }

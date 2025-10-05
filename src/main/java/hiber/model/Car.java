@@ -17,7 +17,7 @@ public final class Car {
     @Column(name = "series")
     private final int series;
 
-    public Car(String model, int series) {
+    public Car(final String model, final int series) {
         this.model = model;
         this.series = series;
     }
@@ -31,7 +31,7 @@ public final class Car {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(final long id) {
         this.id = id;
     }
 
@@ -43,13 +43,9 @@ public final class Car {
         return series;
     }
 
-    @Override
-    public final String toString() {
-        return "Car{model='" + model + "', series=" + series + '}';
-    }
 
     @Override
-    public final boolean equals(Object o) {
+    public final boolean equals(final Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Car car = (Car) o;
         return id == car.id && series == car.series && Objects.equals(model, car.model);
@@ -58,5 +54,11 @@ public final class Car {
     @Override
     public final int hashCode() {
         return Objects.hash(model, series);
+    }
+
+    @Override
+    public final String toString() {
+        return "Car{model='" + model +
+                "', series=" + series + '}';
     }
 }
